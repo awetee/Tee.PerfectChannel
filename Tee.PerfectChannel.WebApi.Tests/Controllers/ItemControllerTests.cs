@@ -4,6 +4,7 @@ using System.Web.Http.Results;
 using FluentAssertions;
 using NUnit.Framework;
 using Tee.PerfectChannel.WebApi.Controllers;
+using Tee.PerfectChannel.WebApi.Models;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace Tee.PerfectChannel.WebApi.Tests.Controllers
@@ -11,11 +12,18 @@ namespace Tee.PerfectChannel.WebApi.Tests.Controllers
     [TestFixture]
     public class ItemControllerTests
     {
+        private ItemController controller;
+
+        [SetUp]
+        public void Setup()
+        {
+            this.controller = new ItemController();
+        }
+
         [Test]
         public void Get_Returns_Ok()
         {
             // Arrange
-            var controller = new ItemController();
 
             // Act
             var actionResult = controller.Get();
@@ -28,7 +36,6 @@ namespace Tee.PerfectChannel.WebApi.Tests.Controllers
         public void Get_Returns_IEnuerableOfItem()
         {
             // Arrange
-            var controller = new ItemController();
 
             // Act
             var actionResult = controller.Get();

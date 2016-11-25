@@ -1,4 +1,4 @@
-﻿namespace Tee.PerfectChannel.WebApi.Tests.Controllers
+﻿namespace Tee.PerfectChannel.WebApi.Models
 {
     public class Item
     {

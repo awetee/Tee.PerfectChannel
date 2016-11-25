@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
-using Tee.PerfectChannel.WebApi.Tests.Controllers;
+using Tee.PerfectChannel.WebApi.Models;
 
 namespace Tee.PerfectChannel.WebApi.Controllers
 {
