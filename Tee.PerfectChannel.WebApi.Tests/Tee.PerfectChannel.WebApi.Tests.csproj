@@ -110,6 +110,8 @@
     <Compile Include="Controllers\BasketControllerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\ItemControllerTests.cs" />
+    <Compile Include="Services\BasketServiceTests.cs" />
+    <Compile Include="Services\MapperServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />

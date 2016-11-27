@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Web.Http.Results;
 using FluentAssertions;
 using NUnit.Framework;
@@ -43,7 +42,6 @@ namespace Tee.PerfectChannel.WebApi.Tests.Controllers
             // Assert
             var result = actionResult as OkNegotiatedContentResult<IEnumerable<Item>>;
             result.Content.Should().NotBeNull();
-            result.Content.Count().ShouldBeEquivalentTo(2);
         }
     }
 }
