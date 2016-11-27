@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 using Tee.PerfectChannel.WebApi.Entities;
+using Tee.PerfectChannel.WebApi.Repository;
 using Tee.PerfectChannel.WebApi.Services;
 
 namespace Tee.PerfectChannel.WebApi.Tests.Services
@@ -11,12 +13,12 @@ namespace Tee.PerfectChannel.WebApi.Tests.Services
     internal class BasketServiceTests
     {
         private BasketService service;
-        private IDataService<Basket> dataService;
+        private IRepository<Basket> dataService;
 
         [SetUp]
         public void Setup()
         {
-            this.dataService = Substitute.For<IDataService<Basket>>();
+            this.dataService = Substitute.For<IRepository<Basket>>();
             this.service = new BasketService(dataService);
         }
 
@@ -24,18 +26,18 @@ namespace Tee.PerfectChannel.WebApi.Tests.Services
         public void AddToBasket_AddsItemToBasket()
         {
             // Arrange
-            var basketId = 2;
+            var userId = 2;
             var itemId = 1;
 
-            var basket = new Basket { Id = basketId };
+            var basket = new Basket { UserId = userId };
 
-            this.dataService.Get(basketId).Returns(basket);
+            this.dataService.GetAll().Returns(new List<Basket> { basket });
 
             // Act
-            var result = this.service.AddToBasket(basketId, new BasketItem { ItemId = itemId, Quantity = 2 });
+            var result = this.service.AddToBasket(userId, new BasketItem { ItemId = itemId, Quantity = 2 });
 
             // Assert
-            result.Id.ShouldBeEquivalentTo(basketId);
+            result.UserId.ShouldBeEquivalentTo(userId);
             result.BasketItems.Count().ShouldBeEquivalentTo(1);
             result.BasketItems.First().ItemId.ShouldBeEquivalentTo(itemId);
         }
@@ -44,16 +46,16 @@ namespace Tee.PerfectChannel.WebApi.Tests.Services
         public void AddToBasket_DoesNotDuplicateExistingItem()
         {
             // Arrange
-            var basketId = 2;
+            var userId = 2;
             var itemId = 1;
-            var basket = new Basket { Id = basketId };
+            var basket = new Basket { UserId = userId };
             basket.AddBacketItem(new BasketItem { ItemId = itemId, Quantity = 1 });
             basket.AddBacketItem(new BasketItem { ItemId = 2, Quantity = 1 });
 
-            this.dataService.Get(basketId).Returns(basket);
+            this.dataService.GetAll().Returns(new List<Basket> { basket });
 
             // Act
-            var result = this.service.AddToBasket(basketId, new BasketItem { ItemId = itemId, Quantity = 2 });
+            var result = this.service.AddToBasket(userId, new BasketItem { ItemId = itemId, Quantity = 2 });
 
             // Assert
             result.BasketItems.Count().ShouldBeEquivalentTo(2);

@@ -20,7 +20,7 @@ namespace Tee.PerfectChannel.WebApi.Migrations
             //
 
             context.Items.AddOrUpdate(
-              p => p.Name,
+              p => p.Id,
                 new Item { Name = "Apples", Description = "Fruit", Stock = 5, Price = 2.5 },
                 new Item { Name = "Bread", Description = "Loaf", Stock = 5, Price = 1.35 },
                 new Item { Name = "Oranges", Description = "Fruit", Stock = 5, Price = 2.99 },
@@ -30,7 +30,12 @@ namespace Tee.PerfectChannel.WebApi.Migrations
 
             context.Baskets.AddOrUpdate(
               p => p.Id,
-                new Basket { Id = 1 }
+                new Basket { Id = 1, UserId = 1 }
+            );
+
+            context.Users.AddOrUpdate(
+              p => p.Id,
+                new User { Id = 1 }
             );
         }
     }

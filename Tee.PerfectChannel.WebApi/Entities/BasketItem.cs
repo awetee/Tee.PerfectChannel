@@ -8,7 +8,7 @@
         public int Quantity { get; set; }
         public double Price { get; set; }
         public double Cost => Quantity * Price;
-        public int BasketId { get; set; }
+        public int UserId { get; set; }
         public Basket Basket { get; set; }
         public Item Item { get; set; }
     }

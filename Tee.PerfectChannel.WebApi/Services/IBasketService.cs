@@ -4,10 +4,10 @@ namespace Tee.PerfectChannel.WebApi.Services
 {
     public interface IBasketService
     {
-        Basket Get(int basketId);
+        Basket GetByUserId(int userId);
 
         void Update(Basket basket);
 
-        Basket AddToBasket(int basketId, BasketItem basketItem);
+        Basket AddToBasket(int userId, BasketItem basketItem);
     }
 }

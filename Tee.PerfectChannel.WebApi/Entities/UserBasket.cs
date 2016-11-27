@@ -12,6 +12,8 @@ namespace Tee.PerfectChannel.WebApi.Entities
 
         public int Id { get; set; }
 
+        public int UserId { get; set; }
+
         protected virtual List<BasketItem> Items { get; }
 
         public double Total => Items.Sum(i => i.Cost);
