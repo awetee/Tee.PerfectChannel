@@ -1,21 +1,20 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Web.Http;
-using Tee.PerfectChannel.WebApi.Models;
+using Tee.PerfectChannel.WebApi.Services;
 
 namespace Tee.PerfectChannel.WebApi.Controllers
 {
     public class ItemController : ApiController
     {
+        private readonly IItemService _itemService;
+
+        public ItemController(IItemService itemService)
+        {
+            _itemService = itemService;
+        }
+
         public IHttpActionResult Get()
         {
-            var result = new List<Item>
-            {
-                new Item(),
-                new Item(),
-            };
-
-            return Ok(result.AsEnumerable());
+            return Ok(this._itemService.GetAll());
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System.Web.Http;
-using Tee.PerfectChannel.WebApi.Models;
 using Tee.PerfectChannel.WebApi.Services;
 
 namespace Tee.PerfectChannel.WebApi.Controllers
@@ -30,10 +29,5 @@ namespace Tee.PerfectChannel.WebApi.Controllers
             var result = this._basketService.AddToBasket(basketId, mapped);
             return Ok(result);
         }
-    }
-
-    public interface IItemService
-    {
-        Item Get(int itemId);
     }
 }
