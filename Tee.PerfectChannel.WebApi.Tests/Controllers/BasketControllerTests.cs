@@ -2,7 +2,7 @@
 using NSubstitute;
 using NUnit.Framework;
 using Tee.PerfectChannel.WebApi.Controllers;
-using Tee.PerfectChannel.WebApi.Models;
+using Tee.PerfectChannel.WebApi.Entities;
 using Tee.PerfectChannel.WebApi.Services;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 

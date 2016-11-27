@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Web.Http.Results;
 using FluentAssertions;
+using NSubstitute;
 using NUnit.Framework;
 using Tee.PerfectChannel.WebApi.Controllers;
-using Tee.PerfectChannel.WebApi.Models;
+using Tee.PerfectChannel.WebApi.Entities;
+using Tee.PerfectChannel.WebApi.Services;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace Tee.PerfectChannel.WebApi.Tests.Controllers
@@ -12,11 +14,13 @@ namespace Tee.PerfectChannel.WebApi.Tests.Controllers
     public class ItemControllerTests
     {
         private ItemController controller;
+        private IItemService itemService;
 
         [SetUp]
         public void Setup()
         {
-            this.controller = new ItemController();
+            this.itemService = Substitute.For<IItemService>();
+            this.controller = new ItemController(itemService);
         }
 
         [Test]

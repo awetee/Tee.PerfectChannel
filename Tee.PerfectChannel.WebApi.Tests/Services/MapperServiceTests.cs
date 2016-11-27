@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
-using Tee.PerfectChannel.WebApi.Models;
+using Tee.PerfectChannel.WebApi.Entities;
 using Tee.PerfectChannel.WebApi.Services;
 
 namespace Tee.PerfectChannel.WebApi.Tests.Services

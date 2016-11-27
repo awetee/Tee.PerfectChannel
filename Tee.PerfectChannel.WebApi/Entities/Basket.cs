@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Tee.PerfectChannel.WebApi.Models
+namespace Tee.PerfectChannel.WebApi.Entities
 {
-    public class Basket
+    public class Basket : IBaseEntity
     {
         public Basket()
         {
@@ -12,9 +12,9 @@ namespace Tee.PerfectChannel.WebApi.Models
 
         public int Id { get; set; }
 
-        private List<BasketItem> Items { get; }
+        protected virtual List<BasketItem> Items { get; }
 
-        public decimal Total => Items.Sum(i => i.Cost);
+        public double Total => Items.Sum(i => i.Cost);
 
         public void AddBacketItem(BasketItem item)
         {

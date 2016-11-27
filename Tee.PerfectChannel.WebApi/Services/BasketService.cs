@@ -1,12 +1,13 @@
-using Tee.PerfectChannel.WebApi.Models;
+using Tee.PerfectChannel.WebApi.Entities;
+using Tee.PerfectChannel.WebApi.Repository;
 
 namespace Tee.PerfectChannel.WebApi.Services
 {
     public class BasketService : IBasketService
     {
-        private readonly IDataService<Basket> _basketDataService;
+        private readonly IRepository<Basket> _basketDataService;
 
-        public BasketService(IDataService<Basket> basketDataService)
+        public BasketService(IRepository<Basket> basketDataService)
         {
             _basketDataService = basketDataService;
         }
@@ -18,7 +19,7 @@ namespace Tee.PerfectChannel.WebApi.Services
 
         public void Update(Basket basket)
         {
-            this._basketDataService.Update();
+            this._basketDataService.Update(basket);
         }
 
         public Basket AddToBasket(int basketId, BasketItem basketItem)

@@ -1,6 +1,6 @@
-﻿namespace Tee.PerfectChannel.WebApi.Models
+﻿namespace Tee.PerfectChannel.WebApi.Entities
 {
-    public class Item
+    public class Item : IBaseEntity
     {
         public int Id { get; set; }
         public string Name { get; set; }

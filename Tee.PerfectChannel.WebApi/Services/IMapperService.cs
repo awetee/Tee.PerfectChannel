@@ -1,4 +1,4 @@
-﻿using Tee.PerfectChannel.WebApi.Models;
+﻿using Tee.PerfectChannel.WebApi.Entities;
 
 namespace Tee.PerfectChannel.WebApi.Services
 {

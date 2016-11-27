@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Tee.PerfectChannel.WebApi.Models;
+using Tee.PerfectChannel.WebApi.Entities;
+using Tee.PerfectChannel.WebApi.Repository;
 
 namespace Tee.PerfectChannel.WebApi.Services
 {
     public class ItemService : IItemService
     {
-        private readonly IDataService<Item> _dataService;
+        private readonly IRepository<Item> _dataService;
 
-        public ItemService(IDataService<Item> dataService)
+        public ItemService(IRepository<Item> dataService)
         {
             _dataService = dataService;
         }
