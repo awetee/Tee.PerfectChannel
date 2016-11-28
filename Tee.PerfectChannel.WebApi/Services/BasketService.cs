@@ -27,7 +27,6 @@ namespace Tee.PerfectChannel.WebApi.Services
         {
             var basket = this.GetByUserId(userId);
             basket.AddBacketItem(basketItem);
-            this.Update(basket);
             return basket;
         }
     }

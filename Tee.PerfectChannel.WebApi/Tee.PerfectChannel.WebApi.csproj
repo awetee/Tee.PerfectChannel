@@ -165,7 +165,8 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
-    <Compile Include="Entities\Item - Copy.cs" />
+    <Compile Include="Services\IUserService.cs" />
+    <Compile Include="Entities\Item.cs" />
     <Compile Include="ItemsContext.cs" />
     <Compile Include="Extensions\Guard.cs" />
     <Compile Include="Entities\IBaseEntity.cs" />

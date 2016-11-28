@@ -34,8 +34,8 @@ namespace Tee.PerfectChannel.WebApi.Migrations
             );
 
             context.Users.AddOrUpdate(
-              p => p.Id,
-                new User { Id = 1 }
+              p => p.Name,
+                new User { Id = 1, Name = "First User" }
             );
         }
     }
