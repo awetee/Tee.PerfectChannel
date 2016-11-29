@@ -7,7 +7,5 @@ namespace Tee.PerfectChannel.WebApi.Services
         Basket GetByUserId(int userId);
 
         void Update(Basket basket);
-
-        Basket AddToBasket(int userId, BasketItem basketItem);
     }
 }

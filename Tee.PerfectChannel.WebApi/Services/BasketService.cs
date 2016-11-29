@@ -1,5 +1,6 @@
 using System.Linq;
 using Tee.PerfectChannel.WebApi.Entities;
+using Tee.PerfectChannel.WebApi.Extensions;
 using Tee.PerfectChannel.WebApi.Repository;
 
 namespace Tee.PerfectChannel.WebApi.Services
@@ -20,14 +21,9 @@ namespace Tee.PerfectChannel.WebApi.Services
 
         public void Update(Basket basket)
         {
-            this._basketDataService.Update(basket);
-        }
+            Guard.AgainstNull(basket, "basket should not be null");
 
-        public Basket AddToBasket(int userId, BasketItem basketItem)
-        {
-            var basket = this.GetByUserId(userId);
-            basket.AddBacketItem(basketItem);
-            return basket;
+            this._basketDataService.Update(basket);
         }
     }
 }

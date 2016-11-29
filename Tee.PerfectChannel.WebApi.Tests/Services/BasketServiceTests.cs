@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using FluentAssertions;
+﻿using System;
+using System.Collections.Generic;
+using FluentAssertions.Common;
 using NSubstitute;
 using NUnit.Framework;
 using Tee.PerfectChannel.WebApi.Entities;
@@ -23,45 +23,44 @@ namespace Tee.PerfectChannel.WebApi.Tests.Services
         }
 
         [Test]
-        public void AddToBasket_AddsItemToBasket()
+        public void GetByUserId_ReturnsBasket()
         {
             // Arrange
             var userId = 2;
-            var itemId = 1;
 
             var basket = new Basket { UserId = userId };
 
             this.dataService.GetAll().Returns(new List<Basket> { basket });
 
             // Act
-            var result = this.service.AddToBasket(userId, new BasketItem { ItemId = itemId, Quantity = 2 });
+            var result = this.service.GetByUserId(userId);
 
             // Assert
-            result.UserId.ShouldBeEquivalentTo(userId);
-            result.BasketItems.Count().ShouldBeEquivalentTo(1);
-            result.BasketItems.First().ItemId.ShouldBeEquivalentTo(itemId);
+            result.IsSameOrEqualTo(basket);
         }
 
         [Test]
-        public void AddToBasket_DoesNotDuplicateExistingItem()
+        public void Update_GivenAValidBasket_UpdatesBasket()
         {
             // Arrange
-            var userId = 2;
-            var itemId = 1;
-            var basket = new Basket { UserId = userId };
-            basket.AddBacketItem(new BasketItem { ItemId = itemId, Quantity = 1 });
-            basket.AddBacketItem(new BasketItem { ItemId = 2, Quantity = 1 });
-
-            this.dataService.GetAll().Returns(new List<Basket> { basket });
+            var basket = new Basket();
 
             // Act
-            var result = this.service.AddToBasket(userId, new BasketItem { ItemId = itemId, Quantity = 2 });
+            this.service.Update(basket);
 
             // Assert
-            result.BasketItems.Count().ShouldBeEquivalentTo(2);
-            result.BasketItems.First(i => i.ItemId == itemId).ItemId.ShouldBeEquivalentTo(itemId);
-            result.BasketItems.First(i => i.ItemId == itemId).Quantity.ShouldBeEquivalentTo(3);
-            result.BasketItems.First(i => i.ItemId == 2).Quantity.ShouldBeEquivalentTo(1);
+            this.dataService.Received(1).Update(basket);
+        }
+
+        [Test]
+        public void Update_GivenANullBasket_DoesNotUpdatesBasket()
+        {
+            // Arrange
+            // Act
+            Assert.Throws<ArgumentNullException>(() => this.service.Update(null));
+
+            // Assert
+            this.dataService.Received(0).Update(Arg.Any<Basket>());
         }
     }
 }

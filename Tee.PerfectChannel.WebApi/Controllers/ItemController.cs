@@ -12,6 +12,7 @@ namespace Tee.PerfectChannel.WebApi.Controllers
             _itemService = itemService;
         }
 
+        [HttpGet]
         public IHttpActionResult Get()
         {
             return Ok(this._itemService.GetAll());

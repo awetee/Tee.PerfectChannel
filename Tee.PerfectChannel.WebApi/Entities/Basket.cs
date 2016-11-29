@@ -18,7 +18,7 @@ namespace Tee.PerfectChannel.WebApi.Entities
 
         public double Total => Items.Sum(i => i.Cost);
 
-        public void AddBacketItem(BasketItem item)
+        public void Add(BasketItem item)
         {
             if (this.Items.Any(i => i.ItemId == item.ItemId))
             {

@@ -1,8 +1,11 @@
-﻿using System.Web.Http.Results;
+﻿using System.Linq;
+using System.Web.Http.Results;
+using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 using Tee.PerfectChannel.WebApi.Controllers;
 using Tee.PerfectChannel.WebApi.Entities;
+using Tee.PerfectChannel.WebApi.Models;
 using Tee.PerfectChannel.WebApi.Services;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
@@ -28,7 +31,7 @@ namespace Tee.PerfectChannel.WebApi.Tests.Controllers
         }
 
         [Test]
-        public void Get_ReturnsBasketOk()
+        public void GetBasket_ReturnsBasketOk()
         {
             // Arrange
             this.userService.Get("TestUser").Returns(new User());
@@ -40,17 +43,29 @@ namespace Tee.PerfectChannel.WebApi.Tests.Controllers
         }
 
         [Test]
+        public void GetBasket_GivenAnUnknownUserName_ReturnsBasketOk()
+        {
+            // Arrange
+            this.userService.Get("TestUser").Returns(new User());
+            // Act
+            var actionResult = controller.GetBasket("Unknown User");
+
+            // Assert
+            Assert.IsInstanceOfType(actionResult, typeof(BadRequestErrorMessageResult));
+        }
+
+        [Test]
         public void AddItemToBasket_ReturnsBasketOk()
         {
             // Arrange
-            var userId = 1;
-            var itemId = 22;
+            const int userId = 1;
+            const int itemId = 22;
             this.basketService.GetByUserId(userId).Returns(new Basket());
             this.mapperService.Map(Arg.Any<Item>()).Returns(new BasketItem());
             this.itemService.Get(itemId).Returns(new Item { Stock = 4 });
 
             // Act
-            var actionResult = controller.AddItemToBasket(userId, itemId, 2);
+            var actionResult = controller.AddBasketEntry(userId, new BasketEntry { ItemId = itemId, Quantity = 2 });
 
             // Assert
             Assert.IsInstanceOfType(actionResult, typeof(OkNegotiatedContentResult<Basket>));
@@ -60,7 +75,7 @@ namespace Tee.PerfectChannel.WebApi.Tests.Controllers
         public void AddItemToBasket_GivenAvailableStock_AddsItemToBasket()
         {
             // Arrange
-            var userId = 1;
+            const int userId = 1;
             this.basketService.GetByUserId(userId).Returns(new Basket());
             var basketItem = new BasketItem();
             this.mapperService.Map(Arg.Any<Item>()).Returns(basketItem);
@@ -71,11 +86,13 @@ namespace Tee.PerfectChannel.WebApi.Tests.Controllers
             this.itemService.Get(itemId).Returns(new Item { Stock = 4 });
 
             // Act
-            controller.AddItemToBasket(userId, itemId, quantity);
+            var actionResult = controller.AddBasketEntry(userId, new BasketEntry { ItemId = itemId, Quantity = quantity });
 
             // Assert
-            this.basketService.Received(1).AddToBasket(userId, basketItem);
-            // TODO this.basketService.Received(1).AddToBasket(userId, Arg.Is<BasketItem>(i => i.Id == userId && i.Quantity == quantity));
+            var result = actionResult as OkNegotiatedContentResult<Basket>;
+            result.Content.BasketItems.Count().ShouldBeEquivalentTo(1);
+            result.Content.BasketItems.First().ShouldBeEquivalentTo(basketItem);
+            this.basketService.Received(1).Update(Arg.Any<Basket>());
         }
 
         [Test]
@@ -93,7 +110,7 @@ namespace Tee.PerfectChannel.WebApi.Tests.Controllers
             this.itemService.Get(itemId).Returns(new Item { Stock = 1 });
 
             // Act
-            var actionResult = controller.AddItemToBasket(userId, itemId, quantity);
+            var actionResult = controller.AddBasketEntry(userId, new BasketEntry { ItemId = itemId, Quantity = quantity });
 
             // Assert
             Assert.IsInstanceOfType(actionResult, typeof(BadRequestErrorMessageResult));
@@ -114,10 +131,10 @@ namespace Tee.PerfectChannel.WebApi.Tests.Controllers
             this.itemService.Get(itemId).Returns(new Item { Stock = 1 });
 
             // Act
-            controller.AddItemToBasket(userId, itemId, quantity);
+            controller.AddBasketEntry(userId, new BasketEntry { ItemId = itemId, Quantity = quantity });
 
             // Assert
-            this.basketService.Received(0).AddToBasket(Arg.Any<int>(), Arg.Any<BasketItem>());
+            this.basketService.Received(0).Update(Arg.Any<Basket>());
         }
     }
 }

@@ -7,23 +7,16 @@ namespace Tee.PerfectChannel.WebApi.Services
 {
     public class ItemService : IItemService
     {
-        private readonly IRepository<Item> _dataService;
+        private readonly IRepository<Item> _itemRepository;
 
-        public ItemService(IRepository<Item> dataService)
+        public ItemService(IRepository<Item> itemRepository)
         {
-            _dataService = dataService;
+            _itemRepository = itemRepository;
         }
 
         public IEnumerable<Item> GetAll()
         {
-            return new List<Item>
-            {
-                new Item { Name = "Apples", Description = "Fruit", Stock = 5, Price = 2.5 },
-                new Item { Name = "Bread", Description = "Loaf", Stock = 5, Price = 1.35 },
-                new Item { Name = "Oranges", Description = "Fruit", Stock = 5, Price = 2.99 },
-                new Item { Name = "Milk", Description = "Milk", Stock = 5, Price = 2.07 },
-                new Item { Name = "Chocolate", Description = "Bars", Stock = 5, Price = 1.79 }
-            };
+            return this._itemRepository.GetAll();
         }
 
         public Item Get(int itemId)

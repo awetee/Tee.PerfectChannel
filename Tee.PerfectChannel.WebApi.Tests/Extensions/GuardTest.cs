@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using Tee.PerfectChannel.WebApi.Extensions;
 
-namespace Tee.PerfectChannel.WebApi.Tests
+namespace Tee.PerfectChannel.WebApi.Tests.Extensions
 {
     [TestFixture]
     public class GuardTests

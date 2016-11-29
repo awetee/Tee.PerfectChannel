@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web.Http;
+﻿using System.Web.Http;
+using System.Web.Http.Dispatcher;
+using Tee.PerfectChannel.WebApi.IOC;
 
 namespace Tee.PerfectChannel.WebApi
 {
@@ -10,6 +9,9 @@ namespace Tee.PerfectChannel.WebApi
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
+            config.Services.Replace(typeof(IHttpControllerActivator), new CompositionRoot());
+
+            FluentValidationConfig.SetupValidation(config);
 
             // Web API routes
             config.MapHttpAttributeRoutes();
