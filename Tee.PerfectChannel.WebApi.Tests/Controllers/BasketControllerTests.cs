@@ -136,5 +136,45 @@ namespace Tee.PerfectChannel.WebApi.Tests.Controllers
             // Assert
             this.basketService.Received(0).Update(Arg.Any<Basket>());
         }
+
+        [Test]
+        public void Checkout_ReturnsInvoiceOk()
+        {
+            // Arrange
+            var userId = 1;
+            this.userService.Get("TestUser").Returns(new User { Id = userId });
+
+            var basket = new Basket();
+            basket.Add(new BasketItem { ItemId = 2 });
+
+            this.basketService.GetByUserId(userId).Returns(basket);
+            this.itemService.Get(2).Returns(new Item { Id = 2, Stock = 4 });
+
+            // Act
+            var actionResult = controller.Checkout("TestUser");
+
+            // Assert
+            Assert.IsInstanceOfType(actionResult, typeof(OkNegotiatedContentResult<Invoice>));
+        }
+
+        [Test]
+        public void Checkout_ChecksOut()
+        {
+            // Arrange
+            var userId = 1;
+            this.userService.Get("TestUser").Returns(new User { Id = userId });
+
+            var basket = new Basket();
+            basket.Add(new BasketItem { ItemId = 2 });
+
+            this.basketService.GetByUserId(userId).Returns(basket);
+            this.itemService.Get(2).Returns(new Item { Id = 2, Stock = 4 });
+
+            // Act
+            controller.Checkout("TestUser");
+
+            // Assert
+            this.basketService.Received(1).Checkout(basket);
+        }
     }
 }

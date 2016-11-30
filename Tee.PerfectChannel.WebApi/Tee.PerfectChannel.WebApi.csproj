@@ -175,8 +175,14 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Migrations\201611301948169_InvoiceModelAdded.cs" />
+    <Compile Include="Migrations\201611301948169_InvoiceModelAdded.Designer.cs">
+      <DependentUpon>201611301948169_InvoiceModelAdded.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\BasketEntry.cs" />
     <Compile Include="IOC\CompositionRoot.cs" />
+    <Compile Include="Entities\Invoice.cs" />
+    <Compile Include="Entities\InvoiceItem.cs" />
     <Compile Include="Services\IUserService.cs" />
     <Compile Include="Entities\Item.cs" />
     <Compile Include="ItemsContext.cs" />
@@ -273,6 +279,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611272326434_ModelUpdate.resx">
       <DependentUpon>201611272326434_ModelUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611301948169_InvoiceModelAdded.resx">
+      <DependentUpon>201611301948169_InvoiceModelAdded.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

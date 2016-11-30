@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Tee.PerfectChannel.WebApi.Entities;
 using Tee.PerfectChannel.WebApi.Repository;
 
@@ -21,7 +20,7 @@ namespace Tee.PerfectChannel.WebApi.Services
 
         public Item Get(int itemId)
         {
-            return this.GetAll().SingleOrDefault(i => i.Id == itemId);
+            return this._itemRepository.Get(itemId);
         }
     }
 }

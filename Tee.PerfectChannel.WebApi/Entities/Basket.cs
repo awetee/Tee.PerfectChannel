@@ -14,7 +14,7 @@ namespace Tee.PerfectChannel.WebApi.Entities
 
         public int UserId { get; set; }
 
-        protected virtual List<BasketItem> Items { get; }
+        protected List<BasketItem> Items { get; }
 
         public double Total => Items.Sum(i => i.Cost);
 
@@ -28,10 +28,16 @@ namespace Tee.PerfectChannel.WebApi.Entities
             }
             else
             {
+                item.BasketId = this.Id;
                 this.Items.Add(item);
             }
         }
 
         public IEnumerable<BasketItem> BasketItems => this.Items.AsEnumerable();
+
+        public void EmptyBasket()
+        {
+            Items.Clear();
+        }
     }
 }

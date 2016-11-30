@@ -24,7 +24,12 @@ namespace Tee.PerfectChannel.WebApi.IOC
             if (controllerType == typeof(BasketController))
             {
                 var mapperService = new MapperService();
-                var basketService = new BasketService(new Repository<Basket>(itemContext));
+                var basketRepository = new Repository<Basket>(itemContext);
+                var invoiceRepository = new Repository<Invoice>(itemContext);
+                var invoiceItemRepository = new Repository<InvoiceItem>(itemContext);
+                var basketItemRepository = new Repository<BasketItem>(itemContext);
+
+                var basketService = new BasketService(basketRepository, invoiceRepository, invoiceItemRepository, basketItemRepository);
                 var userService = new UserService(new Repository<User>(itemContext));
                 return new BasketController(itemService, mapperService, basketService, userService);
             }

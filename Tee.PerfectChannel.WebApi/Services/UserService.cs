@@ -5,7 +5,7 @@ using Tee.PerfectChannel.WebApi.Repository;
 
 namespace Tee.PerfectChannel.WebApi.Services
 {
-    internal class UserService : IUserService
+    public class UserService : IUserService
     {
         private readonly IRepository<User> _userRepository;
 
@@ -17,7 +17,8 @@ namespace Tee.PerfectChannel.WebApi.Services
         public User Get(string userName)
         {
             Guard.AgainstNull(userName, "userName should not be null");
-            return this._userRepository.GetAll().SingleOrDefault(u => u.Name == userName);
+            var users = this._userRepository.GetAll();
+            return users.FirstOrDefault(u => u.Name == userName);
         }
     }
 }

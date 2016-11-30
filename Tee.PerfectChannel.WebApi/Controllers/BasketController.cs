@@ -53,7 +53,7 @@ namespace Tee.PerfectChannel.WebApi.Controllers
             if (errors.Any())
             {
                 var builder = GetErrorMessage(errors);
-                return this.BadRequest(builder.ToString());
+                return this.BadRequest(builder);
             }
 
             this._basketService.Update(basket);
@@ -82,11 +82,50 @@ namespace Tee.PerfectChannel.WebApi.Controllers
             return Ok(basket);
         }
 
+        [HttpGet]
+        [Route("Checkout/{userName}/")]
+        public IHttpActionResult Checkout(string userName)
+        {
+            var user = this._userService.Get(userName);
+
+            if (user == null)
+            {
+                return BadRequest("Unknown User");
+            }
+
+            var basket = this._basketService.GetByUserId(user.Id);
+
+            if (!basket.BasketItems.Any())
+            {
+                return BadRequest("Your basket is empty. Please add at least one item");
+            }
+
+            if (!StockIsStillAvailable(basket))
+            {
+                return BadRequest("Sorry, we don't have enough stock");
+            }
+
+            var invoice = this._basketService.Checkout(basket);
+            return Ok(invoice);
+        }
+
+        private bool StockIsStillAvailable(Basket basket)
+        {
+            return basket.BasketItems.All(i => IsStock(i.ItemId, i.Quantity));
+        }
+
+        private bool IsStock(int itemId, int quantity)
+        {
+            var item = this._itemService.Get(itemId);
+
+            return item.HasEnoughInStock(quantity);
+        }
+
         private void AddToBasket(BasketEntry basketEntry, ICollection<string> errors, Basket basket)
         {
             var item = this._itemService.Get(basketEntry.ItemId);
 
-            if (!item.HasEnoughInStock(basketEntry.Quantity))
+            if (!IsStock(basketEntry.ItemId, basketEntry.Quantity))
             {
                 errors.Add(item.Name);
             }
@@ -106,10 +145,15 @@ namespace Tee.PerfectChannel.WebApi.Controllers
 
             foreach (var error in errors)
             {
-                builder.Append(error != errors.Last() ? $"{error}, " : $"and {error}");
+                builder.Append(ErrorIsLastInList(errors, error) ? $"and {error}" : $"{error}, ");
             }
 
             return builder.ToString();
+        }
+
+        private static bool ErrorIsLastInList(ICollection<string> errors, string error)
+        {
+            return errors.Count > 1 && error == errors.Last();
         }
     }
 }

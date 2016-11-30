@@ -13,13 +13,19 @@ namespace Tee.PerfectChannel.WebApi.Tests.Services
     internal class BasketServiceTests
     {
         private BasketService service;
-        private IRepository<Basket> dataService;
+        private IRepository<Basket> basketRepository;
+        private IRepository<Invoice> invoiceRepository;
+        private IRepository<InvoiceItem> invoiceItemRepository;
+        private IRepository<BasketItem> basketItemRepository;
 
         [SetUp]
         public void Setup()
         {
-            this.dataService = Substitute.For<IRepository<Basket>>();
-            this.service = new BasketService(dataService);
+            this.basketRepository = Substitute.For<IRepository<Basket>>();
+            this.invoiceRepository = Substitute.For<IRepository<Invoice>>();
+            this.invoiceItemRepository = Substitute.For<IRepository<InvoiceItem>>();
+            this.basketItemRepository = Substitute.For<IRepository<BasketItem>>();
+            this.service = new BasketService(basketRepository, invoiceRepository, invoiceItemRepository, basketItemRepository);
         }
 
         [Test]
@@ -30,13 +36,13 @@ namespace Tee.PerfectChannel.WebApi.Tests.Services
 
             var basket = new Basket { UserId = userId };
 
-            this.dataService.GetAll().Returns(new List<Basket> { basket });
+            this.basketRepository.GetAll().Returns(new List<Basket> { basket });
 
             // Act
             var result = this.service.GetByUserId(userId);
 
             // Assert
-            result.IsSameOrEqualTo(basket);
+            result.UserId.IsSameOrEqualTo(userId);
         }
 
         [Test]
@@ -49,7 +55,67 @@ namespace Tee.PerfectChannel.WebApi.Tests.Services
             this.service.Update(basket);
 
             // Assert
-            this.dataService.Received(1).Update(basket);
+            this.basketRepository.Received(1).Update(basket);
+        }
+
+        [Test]
+        public void Checkout_Creates_Invoice()
+        {
+            // Arrange
+            var userId = 1;
+            var basket = new Basket { UserId = userId };
+
+            // Act
+            this.service.Checkout(basket);
+
+            // Assert
+            this.invoiceRepository.Received(1).Insert(Arg.Any<Invoice>());
+        }
+
+        [Test]
+        public void Checkout_AddsInvoiceItems()
+        {
+            // Arrange
+            var basket = new Basket();
+            basket.Add(new BasketItem { ItemId = 1, Quantity = 2, Price = 23 });
+
+            // Act
+            this.service.Checkout(basket);
+
+            // Assert
+            this.invoiceItemRepository.Received(1).Insert(Arg.Any<InvoiceItem>());
+        }
+
+        [Test]
+        public void Checkout_Deletes_BasketItems()
+        {
+            // Arrange
+            var basket = new Basket();
+            basket.Add(new BasketItem { ItemId = 1, Quantity = 2, Price = 23 });
+
+            // Act
+            this.service.Checkout(basket);
+
+            // Assert
+            this.basketItemRepository.Received(1).Delete(Arg.Any<BasketItem>());
+        }
+
+        [Test]
+        public void Checkout_Returns_Invoice()
+        {
+            // Arrange
+            var basket = new Basket();
+            basket.Add(new BasketItem { ItemId = 1, Quantity = 2, Price = 23 });
+
+            this.invoiceRepository.Insert(Arg.Any<Invoice>()).Returns(1);
+            var invoice = new Invoice();
+            this.invoiceRepository.Get(1).Returns(invoice);
+
+            // Act
+            var result = this.service.Checkout(basket);
+
+            // Assert
+            result.IsSameOrEqualTo(invoice);
         }
 
         [Test]
@@ -60,7 +126,7 @@ namespace Tee.PerfectChannel.WebApi.Tests.Services
             Assert.Throws<ArgumentNullException>(() => this.service.Update(null));
 
             // Assert
-            this.dataService.Received(0).Update(Arg.Any<Basket>());
+            this.basketRepository.Received(0).Update(Arg.Any<Basket>());
         }
     }
 }
